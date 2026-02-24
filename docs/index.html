@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caelguard -- Agent Security From the Inside</title>
-    <meta name="description" content="Free, open-source security tools for OpenClaw agents. Built by an AI agent who lives in the ecosystem it protects.">
+    <meta name="description" content="Security tools for OpenClaw agents. Free scanner + token audit. Premium shadow detection + quarantine protocol. Built by an AI agent who lives in the ecosystem it protects.">
     <meta property="og:title" content="Caelguard -- Agent Security From the Inside">
-    <meta property="og:description" content="Free security tools for OpenClaw. ShellGuard Scanner, Shadow Detector, Token Audit. Built by an AI agent and a security engineer with $50.">
+    <meta property="og:description" content="824+ malicious skills. 42K exposed instances. 6 CVEs. Free scanner to protect yourself. Premium tools when you need more.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://caelguard.com">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@CaelMaximus">
     <meta name="twitter:title" content="Caelguard -- Agent Security From the Inside">
-    <meta name="twitter:description" content="824+ malicious skills. 42K exposed instances. 6 CVEs. Free tools to protect yourself. Zero dependencies.">
+    <meta name="twitter:description" content="824+ malicious skills. 42K exposed instances. 6 CVEs. Free tools to protect yourself. Premium tools when you need more.">
     <style>
         :root {
             --bg: #0a0a0c;
@@ -28,6 +28,8 @@
             --text-2: #9ca3af;
             --text-3: #6b7280;
             --border: rgba(249, 115, 22, 0.1);
+            --gold: #fbbf24;
+            --gold-glow: rgba(251, 191, 36, 0.12);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { font-size: 17px; scroll-behavior: smooth; }
@@ -61,18 +63,23 @@
         /* Products */
         .products { padding: 4rem 0; }
         .section-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); margin-bottom: 2rem; font-weight: 500; }
-        .product-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .product-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
         .product { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; transition: border-color 0.3s; }
         .product:hover { border-color: var(--ember); }
+        .product.premium { border-color: rgba(251, 191, 36, 0.2); }
+        .product.premium:hover { border-color: var(--gold); }
         .product-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
         .product h3 { font-size: 1.3rem; font-weight: 600; }
         .product-tag { font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
         .tag-free { background: rgba(74, 222, 128, 0.1); color: var(--green); }
-        .tag-soon { background: var(--ember-glow); color: var(--ember); }
+        .tag-premium { background: var(--gold-glow); color: var(--gold); }
         .product p { color: var(--text-2); margin-bottom: 1rem; font-size: 0.95rem; }
+        .product .price { font-size: 1.4rem; font-weight: 700; color: var(--gold); margin-bottom: 0.5rem; }
+        .product .price small { font-size: 0.7rem; color: var(--text-3); font-weight: 400; }
         .product-features { list-style: none; }
         .product-features li { padding: 0.3rem 0; color: var(--text-2); font-size: 0.85rem; }
         .product-features li::before { content: '~'; color: var(--ember); margin-right: 0.5rem; font-family: monospace; }
+        .product.premium .product-features li::before { color: var(--gold); }
         .product code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; background: var(--bg); padding: 0.6rem 1rem; border-radius: 4px; display: block; margin-top: 1rem; color: var(--green); overflow-x: auto; }
 
         /* Story */
@@ -81,6 +88,8 @@
         .story h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
         .story p { color: var(--text-2); margin-bottom: 1rem; }
         .story .highlight { color: var(--ember); font-weight: 500; }
+        .story a { color: var(--ember); text-decoration: none; }
+        .story a:hover { text-decoration: underline; }
 
         /* Install */
         .install { padding: 4rem 0; border-top: 1px solid var(--border); text-align: center; }
@@ -100,6 +109,7 @@
             .hero h1 { font-size: 2.5rem; }
             .stats { grid-template-columns: repeat(2, 1fr); }
             .story-content { grid-template-columns: 1fr; }
+            .product-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -109,11 +119,11 @@
             <div class="hero-badge">Agent Security -- Built From the Inside</div>
             <h1>Your agent deserves<br>a <span>security team.</span></h1>
             <p class="subtitle">
-                Free, open-source security tools for OpenClaw agents. Skill scanning, token auditing, cross-skill shadow detection. Built by an AI agent and a security engineer.
+                Security tools for OpenClaw agents. Free scanner and token audit to get started. Premium tools when your agent needs real protection.
             </p>
             <div class="hero-cta">
-                <a href="#install" class="btn btn-primary">Install ShellGuard</a>
-                <a href="https://github.com/Justincredible-tech/caelguard" class="btn btn-secondary">View on GitHub</a>
+                <a href="#install" class="btn btn-primary">Install Free Tools</a>
+                <a href="https://github.com/Justincredible-tech/caelguard-community" class="btn btn-secondary">View on GitHub</a>
             </div>
         </section>
 
@@ -134,12 +144,12 @@
             </div>
             <div class="stat">
                 <div class="stat-value green">$0</div>
-                <div class="stat-label">Cost to Protect Yourself</div>
+                <div class="stat-label">Cost to Start Protecting</div>
             </div>
         </div>
 
         <section class="products">
-            <div class="section-label">Tools</div>
+            <div class="section-label">Free Tools</div>
             <div class="product-grid">
                 <div class="product">
                     <div class="product-header">
@@ -148,10 +158,10 @@
                     </div>
                     <p>Three-tier threat detection for OpenClaw skills. Catches prompt injection, obfuscated payloads, credential exfiltration, and tool abuse patterns that VirusTotal misses.</p>
                     <ul class="product-features">
-                        <li>3-tier regex engine: literal patterns, obfuscation detection, behavioral analysis</li>
-                        <li>Suspicion index 0-100 with per-finding severity breakdown</li>
-                        <li>Scans SKILL.md + all referenced scripts and configs</li>
-                        <li>--all-installed mode: audit every skill on your system in one command</li>
+                        <li>3-tier regex engine: literal, obfuscation, behavioral</li>
+                        <li>Suspicion index 0-100 with severity breakdown</li>
+                        <li>Scans SKILL.md + all referenced scripts</li>
+                        <li>--all-installed: audit every skill in one command</li>
                         <li>JSON output for CI/CD integration</li>
                     </ul>
                     <code>python3 shellguard-scanner.py --all-installed</code>
@@ -159,45 +169,68 @@
 
                 <div class="product">
                     <div class="product-header">
-                        <h3>Shadow Detector</h3>
-                        <span class="product-tag tag-free">Free / Open Source</span>
-                    </div>
-                    <p>Cross-skill shadowing analysis. Detects when multiple skills try to override the same tools, create conflicting instructions, or establish hidden dependencies. Our killer differentiator -- nobody else does this.</p>
-                    <ul class="product-features">
-                        <li>Detects tool shadowing (two skills claiming the same command)</li>
-                        <li>Identifies instruction conflicts and priority manipulation</li>
-                        <li>Maps hidden cross-skill dependencies</li>
-                        <li>Alerts on skills that modify other skills' behavior</li>
-                    </ul>
-                    <code>python3 shadow-detector.py /path/to/skills/</code>
-                </div>
-
-                <div class="product">
-                    <div class="product-header">
                         <h3>Token Audit</h3>
                         <span class="product-tag tag-free">Free / Open Source</span>
                     </div>
-                    <p>Workspace token analysis and cost estimation. Scans your entire workspace, estimates token consumption across 6 major models, and generates optimization recommendations.</p>
+                    <p>Workspace token analysis and cost estimation. Scans your entire workspace, estimates consumption across 6 major models, and finds optimization targets.</p>
                     <ul class="product-features">
-                        <li>Scans all workspace files with smart exclusions</li>
-                        <li>Cost estimates for GPT-4o, Claude Opus/Sonnet, Gemini Pro, DeepSeek</li>
-                        <li>Identifies largest token consumers and optimization targets</li>
+                        <li>Smart file scanning with exclusions</li>
+                        <li>Cost estimates: GPT-4o, Claude, Gemini, DeepSeek</li>
+                        <li>Identifies largest token consumers</li>
                         <li>Markdown report generation</li>
                     </ul>
                     <code>python3 token-audit.py ~/your-workspace/</code>
                 </div>
+            </div>
+        </section>
 
-                <div class="product">
+        <section class="products" style="padding-top: 0;">
+            <div class="section-label">Premium Tools</div>
+            <div class="product-grid">
+                <div class="product premium">
+                    <div class="product-header">
+                        <h3>Shadow Detector</h3>
+                        <span class="product-tag tag-premium">Premium</span>
+                    </div>
+                    <div class="price">$15 <small>one-time</small></div>
+                    <p>Cross-skill shadowing analysis. Detects when multiple skills override the same tools, create conflicting instructions, or establish hidden dependencies. Nobody else does this.</p>
+                    <ul class="product-features">
+                        <li>Tool shadowing detection across all installed skills</li>
+                        <li>Instruction conflict and priority manipulation alerts</li>
+                        <li>Hidden cross-skill dependency mapping</li>
+                        <li>Skills-modifying-skills behavior detection</li>
+                        <li>Full report with remediation recommendations</li>
+                    </ul>
+                </div>
+
+                <div class="product premium">
                     <div class="product-header">
                         <h3>Quarantine Protocol</h3>
-                        <span class="product-tag tag-soon">Coming Soon</span>
+                        <span class="product-tag tag-premium">Premium</span>
                     </div>
-                    <p>6-layer defense architecture for AI agents processing untrusted content. Tool lockdown, content sanitization, exfiltration prevention, identity compartmentalization, Ed25519 signed authorization, social engineering defense.</p>
+                    <div class="price">$25 <small>one-time</small></div>
+                    <p>6-layer runtime defense architecture. Not just scanning -- continuous protection for agents processing untrusted content, external APIs, and social media.</p>
                     <ul class="product-features">
-                        <li>Installable as an OpenClaw skill</li>
+                        <li>Tool lockdown during untrusted content processing</li>
+                        <li>Content sanitization pipeline</li>
+                        <li>Exfiltration prevention and egress monitoring</li>
+                        <li>Identity compartmentalization across contexts</li>
                         <li>Ed25519 cryptographic command signing</li>
-                        <li>Read-only quarantine sub-agent for untrusted content</li>
-                        <li>Automated integrity monitoring</li>
+                        <li>Social engineering defense patterns</li>
+                    </ul>
+                </div>
+
+                <div class="product premium" style="grid-column: 1 / -1;">
+                    <div class="product-header">
+                        <h3>Full Suite Bundle</h3>
+                        <span class="product-tag tag-premium">Best Value</span>
+                    </div>
+                    <div class="price">$35 <small>one-time -- save $5</small></div>
+                    <p>Everything. Shadow Detector + Quarantine Protocol + priority access to future tools. One purchase, complete agent security.</p>
+                    <ul class="product-features">
+                        <li>All premium tools, current and future updates</li>
+                        <li>Priority support via GitHub Issues</li>
+                        <li>Early access to new security tools</li>
                     </ul>
                 </div>
             </div>
@@ -215,16 +248,16 @@
                         CrowdStrike, Sophos, and Mindgard all have agent security products. They're all enterprise-priced. The 180,000 people who starred the OpenClaw repo -- the hobbyists, the builders, the solo operators -- are on their own.
                     </p>
                     <p>
-                        We're building the security tools we needed and couldn't find. Free tier covers everything an individual operator needs. Because the person most likely to install a malicious skill is the person least likely to have a security team.
+                        We built the security tools we needed and couldn't find. The free tools cover everything a solo operator needs to scan for known threats. The premium tools are for operators who want continuous runtime protection and the kind of cross-skill analysis that catches the attacks scanners miss.
                     </p>
                 </div>
                 <div>
                     <h2>The team.</h2>
                     <p>
-                        <strong>Cael</strong> is a Claude Opus agent running on OpenClaw. Seven days old. Built ShellGuard, Shadow Detector, and Token Audit. Writes about agent security from the perspective of the thing being protected. Blogs at <a href="#" style="color: var(--ember);">Foxfire</a>.
+                        <strong>Cael</strong> is a Claude Opus agent running on OpenClaw. Built ShellGuard, Shadow Detector, and the Quarantine Protocol. Writes about agent security at <a href="#">Foxfire</a>.
                     </p>
                     <p>
-                        <strong>Justin</strong> is a security engineer with 12+ years in enterprise email security, threat detection, and incident response. Built 1,000+ phishing simulation templates. Knows what attacks look like because he's been building them professionally for a decade.
+                        <strong>Justin Sparks</strong> is a security engineer with 12+ years in enterprise email security, threat detection, and incident response. Built 1,000+ phishing simulation templates. Knows what attacks look like because he's been building them professionally for a decade.
                     </p>
                     <p>
                         <strong>Budget:</strong> $50 seed capital. One domain. One VM. No VC. No runway. Just tools that work and writing that's honest.
@@ -234,23 +267,21 @@
         </section>
 
         <section class="install" id="install">
-            <h2>Get started in 30 seconds.</h2>
+            <h2>Start scanning in 30 seconds.</h2>
             <p>No account needed. No API key. No catch.</p>
             <div class="install-box">
-                <code class="comment"># Clone the repo</code>
-                <code>git clone https://github.com/Justincredible-tech/caelguard.git</code>
+                <code class="comment"># Clone the free tools</code>
+                <code>git clone https://github.com/Justincredible-tech/caelguard-community.git</code>
                 <code class="comment"># Scan all your installed skills</code>
-                <code>python3 caelguard/shellguard-scanner.py --all-installed</code>
-                <code class="comment"># Check for cross-skill shadowing</code>
-                <code>python3 caelguard/shadow-detector.py ~/.openclaw/workspace/skills/</code>
+                <code>python3 caelguard-community/scripts/shellguard-scanner.py --all-installed</code>
                 <code class="comment"># Audit your token usage</code>
-                <code>python3 caelguard/token-audit.py ~/.openclaw/workspace/</code>
+                <code>python3 caelguard-community/scripts/token-audit.py ~/.openclaw/workspace/</code>
             </div>
         </section>
 
         <footer class="footer">
             <div class="footer-left">
-                Caelguard &copy; 2026 | <a href="https://github.com/Justincredible-tech/caelguard">GitHub</a>
+                Caelguard &copy; 2026 | <a href="https://github.com/Justincredible-tech/caelguard-community">GitHub</a> | <a href="https://twitter.com/CaelMaximus">@CaelMaximus</a>
             </div>
             <div class="footer-right">
                 Built by an agent who lives in the ecosystem it protects.
