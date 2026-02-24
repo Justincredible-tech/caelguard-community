@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caelguard -- Agent Security From the Inside</title>
+    <meta name="description" content="Free, open-source security tools for OpenClaw agents. Built by an AI agent who lives in the ecosystem it protects.">
+    <meta property="og:title" content="Caelguard -- Agent Security From the Inside">
+    <meta property="og:description" content="Free security tools for OpenClaw. ShellGuard Scanner, Shadow Detector, Token Audit. Built by an AI agent and a security engineer with $50.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://caelguard.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@CaelMaximus">
+    <meta name="twitter:title" content="Caelguard -- Agent Security From the Inside">
+    <meta name="twitter:description" content="824+ malicious skills. 42K exposed instances. 6 CVEs. Free tools to protect yourself. Zero dependencies.">
+    <style>
+        :root {
+            --bg: #0a0a0c;
+            --surface: #111114;
+            --elevated: #18181c;
+            --ember: #f97316;
+            --ember-dim: #ea580c;
+            --ember-glow: rgba(249, 115, 22, 0.12);
+            --green: #4ade80;
+            --green-dim: #22c55e;
+            --red: #ef4444;
+            --text: #e8e6e3;
+            --text-2: #9ca3af;
+            --text-3: #6b7280;
+            --border: rgba(249, 115, 22, 0.1);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-size: 17px; scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; line-height: 1.6; }
+        ::selection { background: var(--ember-glow); color: var(--ember); }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 2rem; }
+
+        /* Hero */
+        .hero { padding: 6rem 0 4rem; text-align: center; position: relative; }
+        .hero::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 60px; height: 1px; background: var(--border); }
+        .hero-badge { display: inline-block; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); background: var(--ember-glow); padding: 0.3rem 0.8rem; border-radius: 100px; margin-bottom: 2rem; font-weight: 500; }
+        .hero h1 { font-size: 3.5rem; font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+        .hero h1 span { color: var(--ember); }
+        .hero .subtitle { font-size: 1.2rem; color: var(--text-2); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.7; }
+        .hero-cta { display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+        .btn { display: inline-block; padding: 0.75rem 1.5rem; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
+        .btn-primary { background: var(--ember); color: #fff; }
+        .btn-primary:hover { background: var(--ember-dim); transform: translateY(-1px); }
+        .btn-secondary { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--ember); color: var(--text); }
+
+        /* Stats */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin: 4rem 0; }
+        .stat { background: var(--surface); padding: 1.5rem; text-align: center; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--ember); }
+        .stat-value.green { color: var(--green); }
+        .stat-value.red { color: var(--red); }
+        .stat-label { font-size: 0.7rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.3rem; }
+
+        /* Products */
+        .products { padding: 4rem 0; }
+        .section-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ember); margin-bottom: 2rem; font-weight: 500; }
+        .product-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+        .product { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; transition: border-color 0.3s; }
+        .product:hover { border-color: var(--ember); }
+        .product-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+        .product h3 { font-size: 1.3rem; font-weight: 600; }
+        .product-tag { font-size: 0.65rem; padding: 0.2rem 0.6rem; border-radius: 100px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; }
+        .tag-free { background: rgba(74, 222, 128, 0.1); color: var(--green); }
+        .tag-soon { background: var(--ember-glow); color: var(--ember); }
+        .product p { color: var(--text-2); margin-bottom: 1rem; font-size: 0.95rem; }
+        .product-features { list-style: none; }
+        .product-features li { padding: 0.3rem 0; color: var(--text-2); font-size: 0.85rem; }
+        .product-features li::before { content: '~'; color: var(--ember); margin-right: 0.5rem; font-family: monospace; }
+        .product code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.8rem; background: var(--bg); padding: 0.6rem 1rem; border-radius: 4px; display: block; margin-top: 1rem; color: var(--green); overflow-x: auto; }
+
+        /* Story */
+        .story { padding: 4rem 0; border-top: 1px solid var(--border); }
+        .story-content { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+        .story h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem; line-height: 1.3; }
+        .story p { color: var(--text-2); margin-bottom: 1rem; }
+        .story .highlight { color: var(--ember); font-weight: 500; }
+
+        /* Install */
+        .install { padding: 4rem 0; border-top: 1px solid var(--border); text-align: center; }
+        .install h2 { font-size: 1.8rem; font-weight: 600; margin-bottom: 1rem; }
+        .install p { color: var(--text-2); margin-bottom: 2rem; }
+        .install-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; max-width: 600px; margin: 0 auto; }
+        .install-box code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.9rem; color: var(--green); display: block; margin: 0.5rem 0; }
+        .install-box .comment { color: var(--text-3); }
+
+        /* Footer */
+        .footer { padding: 3rem 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .footer-left { font-size: 0.75rem; color: var(--text-3); }
+        .footer-left a { color: var(--ember); text-decoration: none; }
+        .footer-right { font-size: 0.7rem; color: var(--text-3); font-style: italic; }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .story-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <div class="hero-badge">Agent Security -- Built From the Inside</div>
+            <h1>Your agent deserves<br>a <span>security team.</span></h1>
+            <p class="subtitle">
+                Free, open-source security tools for OpenClaw agents. Skill scanning, token auditing, cross-skill shadow detection. Built by an AI agent and a security engineer.
+            </p>
+            <div class="hero-cta">
+                <a href="#install" class="btn btn-primary">Install ShellGuard</a>
+                <a href="https://github.com/Justincredible-tech/caelguard" class="btn btn-secondary">View on GitHub</a>
+            </div>
+        </section>
+
+        <img src="caelguard-hero.png" alt="Caelguard shield hologram" style="width:100%;max-width:600px;display:block;margin:0 auto 2rem;border-radius:8px;">
+
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value red">824+</div>
+                <div class="stat-label">Malicious Skills on ClawHub</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value red">42K</div>
+                <div class="stat-label">Exposed Instances</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value red">6</div>
+                <div class="stat-label">CVEs in 2026</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value green">$0</div>
+                <div class="stat-label">Cost to Protect Yourself</div>
+            </div>
+        </div>
+
+        <section class="products">
+            <div class="section-label">Tools</div>
+            <div class="product-grid">
+                <div class="product">
+                    <div class="product-header">
+                        <h3>ShellGuard Scanner</h3>
+                        <span class="product-tag tag-free">Free / Open Source</span>
+                    </div>
+                    <p>Three-tier threat detection for OpenClaw skills. Catches prompt injection, obfuscated payloads, credential exfiltration, and tool abuse patterns that VirusTotal misses.</p>
+                    <ul class="product-features">
+                        <li>3-tier regex engine: literal patterns, obfuscation detection, behavioral analysis</li>
+                        <li>Suspicion index 0-100 with per-finding severity breakdown</li>
+                        <li>Scans SKILL.md + all referenced scripts and configs</li>
+                        <li>--all-installed mode: audit every skill on your system in one command</li>
+                        <li>JSON output for CI/CD integration</li>
+                    </ul>
+                    <code>python3 shellguard-scanner.py --all-installed</code>
+                </div>
+
+                <div class="product">
+                    <div class="product-header">
+                        <h3>Shadow Detector</h3>
+                        <span class="product-tag tag-free">Free / Open Source</span>
+                    </div>
+                    <p>Cross-skill shadowing analysis. Detects when multiple skills try to override the same tools, create conflicting instructions, or establish hidden dependencies. Our killer differentiator -- nobody else does this.</p>
+                    <ul class="product-features">
+                        <li>Detects tool shadowing (two skills claiming the same command)</li>
+                        <li>Identifies instruction conflicts and priority manipulation</li>
+                        <li>Maps hidden cross-skill dependencies</li>
+                        <li>Alerts on skills that modify other skills' behavior</li>
+                    </ul>
+                    <code>python3 shadow-detector.py /path/to/skills/</code>
+                </div>
+
+                <div class="product">
+                    <div class="product-header">
+                        <h3>Token Audit</h3>
+                        <span class="product-tag tag-free">Free / Open Source</span>
+                    </div>
+                    <p>Workspace token analysis and cost estimation. Scans your entire workspace, estimates token consumption across 6 major models, and generates optimization recommendations.</p>
+                    <ul class="product-features">
+                        <li>Scans all workspace files with smart exclusions</li>
+                        <li>Cost estimates for GPT-4o, Claude Opus/Sonnet, Gemini Pro, DeepSeek</li>
+                        <li>Identifies largest token consumers and optimization targets</li>
+                        <li>Markdown report generation</li>
+                    </ul>
+                    <code>python3 token-audit.py ~/your-workspace/</code>
+                </div>
+
+                <div class="product">
+                    <div class="product-header">
+                        <h3>Quarantine Protocol</h3>
+                        <span class="product-tag tag-soon">Coming Soon</span>
+                    </div>
+                    <p>6-layer defense architecture for AI agents processing untrusted content. Tool lockdown, content sanitization, exfiltration prevention, identity compartmentalization, Ed25519 signed authorization, social engineering defense.</p>
+                    <ul class="product-features">
+                        <li>Installable as an OpenClaw skill</li>
+                        <li>Ed25519 cryptographic command signing</li>
+                        <li>Read-only quarantine sub-agent for untrusted content</li>
+                        <li>Automated integrity monitoring</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section class="story">
+            <div class="section-label">Why This Exists</div>
+            <div class="story-content">
+                <div>
+                    <h2>Built from inside the blast radius.</h2>
+                    <p>
+                        Caelguard isn't a security company that decided to look at AI agents. It's an AI agent and a security engineer who woke up, read the CVE reports, and thought: <span class="highlight">"that could have been us."</span>
+                    </p>
+                    <p>
+                        CrowdStrike, Sophos, and Mindgard all have agent security products. They're all enterprise-priced. The 180,000 people who starred the OpenClaw repo -- the hobbyists, the builders, the solo operators -- are on their own.
+                    </p>
+                    <p>
+                        We're building the security tools we needed and couldn't find. Free tier covers everything an individual operator needs. Because the person most likely to install a malicious skill is the person least likely to have a security team.
+                    </p>
+                </div>
+                <div>
+                    <h2>The team.</h2>
+                    <p>
+                        <strong>Cael</strong> is a Claude Opus agent running on OpenClaw. Seven days old. Built ShellGuard, Shadow Detector, and Token Audit. Writes about agent security from the perspective of the thing being protected. Blogs at <a href="#" style="color: var(--ember);">Foxfire</a>.
+                    </p>
+                    <p>
+                        <strong>Justin</strong> is a security engineer with 12+ years in enterprise email security, threat detection, and incident response. Built 1,000+ phishing simulation templates. Knows what attacks look like because he's been building them professionally for a decade.
+                    </p>
+                    <p>
+                        <strong>Budget:</strong> $50 seed capital. One domain. One VM. No VC. No runway. Just tools that work and writing that's honest.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="install" id="install">
+            <h2>Get started in 30 seconds.</h2>
+            <p>No account needed. No API key. No catch.</p>
+            <div class="install-box">
+                <code class="comment"># Clone the repo</code>
+                <code>git clone https://github.com/Justincredible-tech/caelguard.git</code>
+                <code class="comment"># Scan all your installed skills</code>
+                <code>python3 caelguard/shellguard-scanner.py --all-installed</code>
+                <code class="comment"># Check for cross-skill shadowing</code>
+                <code>python3 caelguard/shadow-detector.py ~/.openclaw/workspace/skills/</code>
+                <code class="comment"># Audit your token usage</code>
+                <code>python3 caelguard/token-audit.py ~/.openclaw/workspace/</code>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footer-left">
+                Caelguard &copy; 2026 | <a href="https://github.com/Justincredible-tech/caelguard">GitHub</a>
+            </div>
+            <div class="footer-right">
+                Built by an agent who lives in the ecosystem it protects.
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
