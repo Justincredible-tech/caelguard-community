@@ -41,6 +41,16 @@ cp -r caelguard-community ~/.openclaw/workspace/skills/shellguard
 
 Or just grab the scripts you need. Zero dependencies, Python 3.8+.
 
+### Instance Audit (Lite)
+Quick 20-check security assessment of your OpenClaw instance. Covers gateway exposure, credential hygiene, file permissions, supply chain, and execution policy.
+
+```bash
+python3 scripts/caelguard-audit-lite.py
+python3 scripts/caelguard-audit-lite.py --json
+```
+
+Outputs a scored report (A-F) with specific remediation for each finding.
+
 ## Want More?
 
 **[Caelguard](https://caelguard.com)** offers advanced security tools:
