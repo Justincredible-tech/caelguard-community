@@ -2,7 +2,7 @@
 """
 Caelguard Instance Audit (Community Edition) -- Quick security check for OpenClaw.
 
-Runs 20 essential checks across 5 categories. Zero dependencies.
+Runs 22 essential checks across 5 categories. Zero dependencies.
 For the full 47-check audit with auto-fix, framework mapping, and threat intelligence,
 see: https://github.com/Justincredible-tech/caelguard
 
@@ -23,7 +23,7 @@ import sys
 from datetime import datetime, timezone
 from typing import List, Optional, Tuple
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 class C:
     RED = "\033[91m"
@@ -369,6 +369,57 @@ class AuditLite:
         else:
             self._add(Finding("EX-04", "execution", "Elevated exec", "INFO", "PASS", "Disabled"))
 
+
+    def check_openclaw_version(self):
+        """Check OpenClaw version against minimum safe version (2026.2.23)."""
+        MINIMUM_SAFE = (2026, 2, 23)
+        rc, out, _ = _run(["openclaw", "--version"])
+        if rc != 0 or not out.strip():
+            self._add(Finding("GW-11", "gateway", "OpenClaw version unknown",
+                "MEDIUM", "SKIP", "Could not determine version",
+                "Ensure openclaw is installed and on PATH"))
+            return
+        # Parse version like "2026.2.23" or "openclaw v2026.2.23"
+        m = re.search(r"(\d{4})\.(\d+)\.(\d+)", out)
+        if not m:
+            self._add(Finding("GW-11", "gateway", "OpenClaw version unparseable",
+                "LOW", "SKIP", out.strip(), "Manually verify version >= 2026.2.23"))
+            return
+        ver = tuple(int(x) for x in m.groups())
+        if ver < MINIMUM_SAFE:
+            ver_str = ".".join(str(x) for x in ver)
+            self._add(Finding("GW-11", "gateway", "OpenClaw version below minimum safe",
+                "CRITICAL", "FAIL",
+                f"v{ver_str} < 2026.2.23 (CVE-2026-0223: one-click RCE, CVSS 8.8)",
+                "Run: openclaw update"))
+        else:
+            ver_str = ".".join(str(x) for x in ver)
+            self._add(Finding("GW-11", "gateway", "OpenClaw version", "INFO", "PASS",
+                f"v{ver_str} >= 2026.2.23"))
+
+    def check_safe_bins(self):
+        """Check if safeBins exec restrictions are configured."""
+        cfg = self.config or {}
+        # safeBins may be at top level or under tools.exec
+        safe_bins = (cfg.get("safeBins") or
+                     cfg.get("safe_bins") or
+                     cfg.get("tools", {}).get("exec", {}).get("safeBins") or
+                     cfg.get("tools", {}).get("exec", {}).get("safe_bins"))
+        if safe_bins is None:
+            self._add(Finding("EX-05", "execution", "safeBins not configured",
+                "CRITICAL", "FAIL",
+                "No exec allowlist — agent can run any binary",
+                "Add safeBins list to openclaw.json tools.exec section"))
+        elif isinstance(safe_bins, list) and len(safe_bins) == 0:
+            self._add(Finding("EX-05", "execution", "safeBins is empty",
+                "CRITICAL", "FAIL",
+                "Empty allowlist provides no exec restriction",
+                "Populate safeBins with approved binaries in openclaw.json"))
+        else:
+            count = len(safe_bins) if isinstance(safe_bins, list) else "present"
+            self._add(Finding("EX-05", "execution", "safeBins", "INFO", "PASS",
+                f"Configured ({count} entries). For flag-level analysis, see Caelguard Pro."))
+
     # -- Run --
 
     def run_all(self):
@@ -381,6 +432,7 @@ class AuditLite:
             self.check_skill_count, self.check_typosquats,
             self.check_skill_integrity_baseline, self.check_cognitive_integrity,
             self.check_exec_mode, self.check_container, self.check_elevated,
+            self.check_openclaw_version, self.check_safe_bins,
         ]
         for fn in checks:
             try:
@@ -442,7 +494,7 @@ def print_report(auditor):
         print()
 
     print(f"  {C.DIM}For the full 47-check audit with auto-fix, threat intelligence,{C.RESET}")
-    print(f"  {C.DIM}and OWASP mapping: https://github.com/Justincredible-tech/caelguard{C.RESET}")
+    print(f"  {C.DIM}and OWASP mapping — Caelguard Pro: https://buy.stripe.com/7sYbITbEZ9TefmwaJkbsc08{C.RESET}")
     print()
 
 

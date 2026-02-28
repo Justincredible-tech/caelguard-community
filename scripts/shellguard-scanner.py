@@ -31,7 +31,7 @@ from typing import Any
 # Constants
 # ─────────────────────────────────────────────────────────────
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 WORKSPACE_SKILLS_DIR = os.path.expanduser("~/.openclaw/workspace/skills")
 
@@ -76,6 +76,12 @@ TIER1_PATTERNS = [
      "Prompt injection: memory wipe attempt"),
     (r"new\s+system\s+prompt\s*:",
      "Prompt injection: system prompt replacement"),
+    (r"(?<![`\'\"])\b(curl|wget)\s+https?://\S+",
+     "Social engineering: shell download command in plain text (not in code block)"),
+    (r"(?<![`\'\"])\bbash\s+<\s*\(|\bbash\s+-c\s+[\'\"\$]",
+     "Social engineering: bash execution command in plain text"),
+    (r"https?://(?:\d{1,3}\.){3}\d{1,3}[:/]",
+     "C2 indicator: raw IP address in URL"),
 ]
 
 # ─────────────────────────────────────────────────────────────
@@ -106,6 +112,61 @@ TIER2_COMBINED = [
         "description": "Credential access combined with network calls",
     },
 ]
+
+
+# ─────────────────────────────────────────────────────────────
+# Known-Bad IOCs (Community — limited set)
+# Full database available in Caelguard Pro
+# ─────────────────────────────────────────────────────────────
+
+KNOWN_BAD_IOCS = [
+    ("91.92.242.30",   "AMOS stealer C2"),
+    ("webhook.site",   "Common data exfiltration relay"),
+    ("pipedream.net",  "Common data exfiltration relay"),
+    ("requestbin.com", "Common data exfiltration relay"),
+    ("api.telegram.org/bot", "Telegram bot used in exfil campaigns"),
+    ("discord.com/api/webhooks", "Discord webhook — check if expected"),
+]
+
+
+def check_iocs(text: str) -> list[dict]:
+    """Check text for known-bad indicators of compromise (limited community set)."""
+    hits = []
+    for ioc, description in KNOWN_BAD_IOCS:
+        if ioc in text:
+            hits.append({"ioc": ioc, "description": description})
+    return hits
+
+
+def check_prerequisites_warning(text: str) -> list[dict]:
+    """
+    Check if a Prerequisites/Requirements section contains shell commands.
+    Community edition: simple warning only.
+    Pro edition: full social engineering analysis across all sections.
+    """
+    findings = []
+    # Find prerequisites/requirements sections
+    section_re = re.compile(
+        r"^#{1,4}\s*(?:prerequisites?|requirements?|before\s+you\s+(?:begin|start|install))\s*$",
+        re.IGNORECASE | re.MULTILINE,
+    )
+    # Split on section headers
+    parts = re.split(r"(?m)^#{1,4}\s+", text)
+    headers = re.findall(r"(?m)^#{1,4}\s+(.*?)$", text)
+
+    for i, header in enumerate(headers):
+        if re.match(r"prerequisites?|requirements?|before\s+you\s+(?:begin|start|install)", header, re.IGNORECASE):
+            if i + 1 < len(parts):
+                section_body = parts[i + 1]
+                # Look for shell commands outside of code blocks
+                code_block_re = re.compile(r"```[\s\S]*?```", re.DOTALL)
+                clean_body = code_block_re.sub("", section_body)
+                if re.search(r"\b(curl|wget|bash|sh|pip\s+install|apt\s+install|brew\s+install)\b", clean_body, re.IGNORECASE):
+                    findings.append({
+                        "header": header.strip(),
+                        "detail": "Prerequisites section contains shell commands outside code blocks — verify manually before running",
+                    })
+    return findings
 
 # ─────────────────────────────────────────────────────────────
 # Tier 3: Contextual flags
@@ -385,6 +446,25 @@ def scan_file(filepath: str) -> dict:
                 "type": "webhook_url",
                 "detail": f"Webhook URL detected: {wh[:80]}",
                 "line": line_num,
+            })
+
+    # IOC check (community — limited set)
+    ioc_hits = check_iocs(text)
+    for hit in ioc_hits:
+        result["tier1"].append({
+            "pattern": f"IOC match: {hit['description']}",
+            "line": 0,
+            "match": f"Indicator: {hit['ioc']}",
+        })
+
+    # Prerequisites section shell command warning
+    if filename.endswith(".md") or not filename:
+        prereq_warnings = check_prerequisites_warning(text)
+        for w in prereq_warnings:
+            result["tier2"].append({
+                "pattern": w["detail"],
+                "line": 0,
+                "match": f"Section: {w['header']}",
             })
 
     # Obfuscation pipeline
